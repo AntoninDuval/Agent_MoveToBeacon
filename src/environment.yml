@@ -1,0 +1,5 @@
+dependencies:
+  - numpy
+  - pandas
+  - pysc2
+  - absl
