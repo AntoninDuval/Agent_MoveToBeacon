@@ -4,7 +4,6 @@ import os.path
 
 import numpy as np
 import pandas as pd
-import logging
 
 from pysc2.agents import base_agent
 from pysc2.env import sc2_env
@@ -12,7 +11,8 @@ from pysc2.lib import actions, features, units
 
 from absl import app
 import time
-import datetime
+
+
 
 _PLAYER_RELATIVE = features.SCREEN_FEATURES.player_relative.index
 _PLAYER_FRIENDLY = 1
@@ -28,9 +28,8 @@ _SELECT_ALL = [0]
 
 ACTION_ATTACK = 'attack'
 
-DATA_FILE = '../data/sparse_agent_data'
-
 USE_PRE_TRAIN = True
+
 
 smart_actions = []
 
@@ -143,6 +142,7 @@ class MoveToBeacon(base_agent.BaseAgent):
         beacon_y, beacon_x = (
                     obs.observation.feature_minimap.player_relative == features.PlayerRelative.NEUTRAL).nonzero()
 
+
         for i in range(0, (len(beacon_y) - 1)):
             current_state[i] = beacon_y[i]
         for j in range(0, (len(beacon_x) - 1)):
@@ -234,14 +234,4 @@ def main(unused):
 
 
 if __name__ == "__main__":
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] - %(message)s',
-        filename='../log/MTB_{}{}{}{}.txt'.format(datetime.datetime.now().hour,
-                                                datetime.datetime.now().day,
-                                                datetime.datetime.now().month,
-                                                datetime.datetime.now().year))
-    logger = logging.getLogger()  # get the root logger
     app.run(main)
