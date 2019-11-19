@@ -181,9 +181,11 @@ class MoveToBeacon(base_agent.BaseAgent):
         marine = random.choice(marines)
 
         self.pos_marine = [marine.x, marine.y]
-        self.previous_pos_marine = self.pos_marine
+
         if self.pos_marine != self.previous_pos_marine:
             return actions.FUNCTIONS.Attack_screen("now", target)
+        self.previous_pos_marine = self.pos_marine
+
 
         rl_action = self.qlearn.choose_action(
             str(current_state))  # we let the q-table decide of the next action and add the state if it doesn't exist

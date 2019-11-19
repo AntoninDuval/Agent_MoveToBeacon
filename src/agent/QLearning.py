@@ -5,8 +5,6 @@ from agent.Logger import Logger
 DATA_FILE = '../data/sparse_agent_data'
 
 
-
-
 class QLearningTable:
     def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9, use_pre_train=False):
         self.logger = Logger().logger
@@ -20,17 +18,18 @@ class QLearningTable:
             self.epsilon = 0.01
             self.logger.info('Qtable loaded')
             self.logger.info(str(self.q_table))
+        else:
+            self.q_table = pd.DataFrame(columns=actions)
 
     def choose_action(self, observation):
         self.check_state_exist(observation)
 
         if np.random.uniform() < self.epsilon:
             # choose best action
-            state_action = self.q_table.ix[observation, :]
+            state_action = self.q_table.loc[observation, :]
 
             # some actions have the same value
-            state_action = state_action.reindex(np.random.permutation(state_action.index))
-
+            state_action = state_action.reindex(np.random.permutation(state_action.index)).astype('int')
             action = state_action.idxmax()
         else:
             # choose random action
@@ -42,11 +41,11 @@ class QLearningTable:
         self.check_state_exist(s_)
         self.check_state_exist(s)
 
-        q_predict = self.q_table.ix[s, a]
-        q_target = r + self.gamma * self.q_table.ix[s_, :].max()
+        q_predict = self.q_table.loc[s, a]
+        q_target = r + self.gamma * self.q_table.loc[s_, :].max()
 
         # update
-        self.q_table.ix[s, a] += self.lr * (q_target - q_predict)
+        self.q_table.loc[s, a] += self.lr * (q_target - q_predict)
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
